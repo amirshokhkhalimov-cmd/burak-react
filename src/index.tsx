@@ -8,14 +8,17 @@ import CssBaseline from '@mui/material/CssBaseline';
 import {ThemeProvider} from '@mui/material/styles';
 import "./css/index.css";
 import theme from "./app/MaterialTheme/MaterialTheme";
+import {BrowserRouter as Router} from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <App />
-      </ThemeProvider>
+        <Router>
+          <App />
+        </Router>
+        </ThemeProvider>
       {/* <App /> */}
     </Provider>
   </React.StrictMode>,
