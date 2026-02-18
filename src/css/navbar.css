@@ -11,7 +11,7 @@
     height:642px;
 }
 
-.home-navbar .navbar-container.menu {
+.home-navbar .navbar-container .menu {
     height:50px;
     display: flex;
     flex-direction: row;
