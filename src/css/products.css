@@ -1,0 +1,419 @@
+.products-page {
+    position: relative;
+    width: 100%;
+    height: auto;
+    background: #f8f8ff;
+}
+
+.products-page .products {
+    width: 100%;
+    height: auto;
+    display: flex;
+    background: #f8f8ff;
+    flex-direction: column;
+}
+ .headerRow {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 14px;
+  padding-bottom: 8px;
+}
+
+/* TITLE */
+.restaurantTitle {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 38px;
+  font-weight: 700;
+  margin: 0;
+  color: #2b2b2b;
+}
+
+/* SEARCH AREA RIGHT */
+.searchArea {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* INPUT STYLE */
+.searchInput {
+  width: 220px;
+  background: #e9e7e5;
+  border-radius: 999px;
+}
+
+.searchInput .MuiOutlinedInput-root {
+  border-radius: 999px;
+  background: #e9e7e5;
+}
+
+.searchInput input {
+  padding-left: 14px !important;
+}
+
+/* SEARCH BUTTON */
+.searchButton {
+  background: #2b2b2b !important;
+  color: #f3c98b !important;
+  border-radius: 999px !important;
+  padding: 6px 18px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+  text-transform: uppercase !important;
+}
+
+.searchButton:hover {
+  background: #1c1c1c !important;
+}
+
+/* Filter */
+/* right-align the whole section */
+.dishes-filter-section.MuiStack-root{
+  width: 100% !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+}
+
+/* make buttons in ONE ROW */
+.dishes-filter-box.MuiStack-root{
+  display: flex !important;
+  flex-direction: row !important;   /* important */
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 12px !important;
+
+  width: fit-content !important;
+  margin-left: auto !important;
+}
+
+/* Category-List */
+/* left vertical sidebar */
+.dishes-category-section.MuiStack-root{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+
+  width: 44px;
+  gap: 10px;
+  padding-top: 20px;
+
+  flex-shrink: 0;
+}
+
+/* each category button */
+.category-list-btn{
+  width: 34px !important;
+  height: 92px !important;
+
+  border-radius: 10px !important;
+  min-width: unset !important;
+  padding: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+
+  /* vertical text */
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+
+  box-shadow: none !important;
+}
+
+/* Menu */
+
+/* Category + Products in same row */
+.menu-layout.MuiStack-root{
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important; 
+  gap: 18px !important;
+  margin-top: 14px !important;
+}
+
+/* GRID: 4 cards per row like Figma */
+.product-wrapper.MuiStack-root{
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 28px 34px !important;          /* row gap, column gap */
+  align-items: start !important;
+  width: 100% !important;
+}
+
+/* each product item */
+.product-card.MuiStack-root{
+  width: 100% !important;
+}
+
+/* image block */
+.product-img{
+  position: relative !important;
+  height: 210px !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+/* "Normal size" / "LARGE size" label */
+.product-sale{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+
+  height: 26px;                 /* exact figma pill height */
+  padding: 0 10px;              /* horizontal padding only */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  font-size: 10px;              /* figma uses smaller font */
+  font-weight: 700;
+  letter-spacing: 0.2px;
+
+  line-height: 1;
+  background-color:#FF9200 ;
+}
+
+/* cart button on image (bottom-center like Figma) */
+.shop-btn{
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 12px !important;
+  transform: translateX(-50%) !important;
+  z-index: 3;
+opacity: 0;
+transition: opacity 0.35s ease;
+  min-width: 0 !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+/* make the icon centered */
+.shop-btn img{
+  height: 46px;
+left: 105px;
+display: flex;
+flex-direction: row;
+align-items: center;
+cursor: pointer;
+z-index: 3;
+opacity: 1;
+transition: opacity 0.5s ease;
+background: rgb(198 0 255 / 66%);
+border: 2px solid #d7b686;
+border-radius: 10px;
+font-family: "Poppins";
+font-style: normal;
+font-weight: 600;
+font-size: 10px;
+line-height: 15px;
+color: #f8f8ff;
+}
+
+/* Hover */
+.product-img:hover .shop-btn{
+  opacity: 1;
+}
+
+.product-img:hover .view-btn{
+  opacity: 1;
+}
+
+
+/* eye button on image (bottom-right) */
+.view-btn{
+  position: absolute !important;
+  bottom: 12px !important;
+  right: 12px !important;            /* you can remove sx={{right:"36px"}} if you want */
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  min-width: 0 !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+/* prevent MUI default button padding from messing layout */
+.shop-btn .MuiButton-startIcon,
+.view-btn .MuiButton-startIcon{
+  margin: 0 !important;
+}
+
+/* text block under image */
+.product-desc{
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* product name */
+.product-title{
+  display: block;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  
+}
+
+/* price row centered */
+.product-price{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  font-size: 14px;
+  font-weight: 700;
+  color:#E3C08D;
+}
+
+/* tighten icon size a bit */
+.product-price svg{
+  font-size: 18px;
+}
+
+/* responsive */
+@media (max-width: 1200px){
+  .product-wrapper.MuiStack-root{
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+@media (max-width: 900px){
+  .product-wrapper.MuiStack-root{
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 520px){
+  .product-wrapper.MuiStack-root{
+    grid-template-columns: 1fr !important;
+  }
+  .product-img.MuiStack-root{
+    height: 220px !important;
+  }
+}
+
+/* PAGINATION */
+.pagination-section{
+  width: 100%;
+  display: flex;
+  justify-content: center;   /* center horizontally */
+  align-items: center;
+
+  margin-top: 26px;          /* distance from dishes */
+  margin-bottom: 10px;
+}
+
+/*  BRAND LOGO*/
+.brand-card {
+  width: 100%;
+  height: 630px;
+  background:#0D1518;
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.brand-title{
+  width: 100% !important;      /* allow full width */
+  height: auto !important;     /* allow content (logos) to show */
+  margin-top: 40px;
+  text-align: center;
+
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 36px;
+  color:#E3C08D;
+}
+
+.brand-logo{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 48px;
+  margin-top: 44px;
+}
+
+.brand-logo-img{
+  width: 260px;        /* card width */
+  height: 360px;       /* card height */
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.brand-logo-img.MuiStack-root{
+  background-size: contain;     /* keep full logo visible */
+  background-position: center;
+  background-repeat: no-repeat;
+   box-shadow: 0 0 20px rgba(255,255,255,0.25);
+}
+
+/* ADDRESS */
+
+/* whole section background */
+.address{
+  width: 100%;
+  background: #f5f7fb;        
+   padding-top: 90px;
+  padding-bottom: 40px;      
+  
+}
+
+/* wrapper */
+.address-area{
+  width: 100%;
+  height: 567px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;   
+  margin-bottom: 10px;       /* center title and map */
+}
+
+/* title */
+.map-title{
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 36px;
+  text-align: center;
+  color: #2b2b2b;
+  margin: 0;
+}
+
+/* map sizing + centered card look */
+.address-area iframe{
+  margin-top: 60px;             /* exactly like your inline style */
+  width: 100%;
+  max-width: 980px;             /* map width like figma */
+  height: 320px;                /* map height like figma */
+  border: 0;
+  border-radius: 10px;          /* soft corners */
+  overflow: hidden;
+}
+
+/* CHOSEN PRODUCTs */
+
+
