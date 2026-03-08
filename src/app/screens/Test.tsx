@@ -22,7 +22,7 @@ class Test extends Component {
 
 componentDidMount() {
       console.log("Component did mount");
-      // runs after first render
+      // runs after first render.   => Retrieve data from BAckend Server
   }
 
   componentWillUnmount() {
