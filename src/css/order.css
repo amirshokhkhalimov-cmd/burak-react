@@ -180,8 +180,7 @@
   border-bottom: 1px solid #f8f8ff;
 }
 
-/* В TSX у тебя className="table_list", а в CSS на скрине table-list.
-   Добавляю оба, чтобы точно сработало. */
+
 .order-page .order-left .order-nav-frame .table-list,
 .order-page .order-left .order-nav-frame .table_list {
   display: flex;
