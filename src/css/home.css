@@ -102,9 +102,9 @@
     );
 }
 
-/** NEW DISHES **/
+/* NEW DISHES */
 
-/** NEW PRODUCTS **/
+/* NEW PRODUCTS */
 
 .homepage .new-products-frame {
   width: 100%;
@@ -252,7 +252,7 @@
     overflow: hidden;
 }
 
-/* ACTIVE USERS */
+
 
 /* ACTIVE USERS */
 
@@ -298,7 +298,7 @@
 }
 
 .homepage .active-users-frame .cards-frame .card .card-item {
-  height: 240px;            /* image height like screenshot */
+  height: 240px;            /* image height  */
   overflow: hidden;
 }
 
@@ -335,7 +335,7 @@
     color:#e3c08d;
 }
 
-/** EVENTS **/
+/* EVENTS */
 
 .homepage .events-frame {
   width: 100%;
