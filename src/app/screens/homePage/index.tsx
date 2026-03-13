@@ -28,6 +28,8 @@ export  default function HomePage (){
 const {setPopularDishes} = actionDispatch(useDispatch ());
 const {popularDishes} = useSelector(popularDishesRetriever);
 
+console.log( process.env.REACT_APP_API_URL);
+
     useEffect(() => {
         //Backend Server data request => Data(get data from backend server) => Slice:Data => Store (save data in Redux Store) => Selector: Store => Data (retrieve data from Redux Store) => Component (use data in component)
         const result = [
