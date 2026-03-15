@@ -9,6 +9,22 @@ import PaginationItem from "@mui/material/PaginationItem";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
+import { useDispatch } from "react-redux";
+import { createSelector, Dispatch } from "@reduxjs/toolkit";
+import { setProducts } from "./slice";
+import { Product } from "../../../lib/data/types/product";
+import { retrieveProducts } from "./selector";
+
+/** REDUX SLICE & SELECTOR **/
+const actionDispatch = (dispatch:Dispatch) => ({
+  setProducts: (data:Product[]) => dispatch(setProducts(data)),
+});
+
+const producstRetriever = createSelector (retrieveProducts, (products) => ({
+  products,
+}));
+
+
 const products = [
   { productName: "Cutlet", imagePath: "/img/cutlet.webp" },
   { productName: "Kebab", imagePath: "/img/kebab-fresh.webp" },
