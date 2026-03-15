@@ -1,6 +1,7 @@
 import axios from "axios";
 import { serverApi } from "../../lib/config";
 import { Member } from "../../lib/data/types/member";
+import { Product } from "../../lib/data/types/product";
 
 
 class MemeberService {
@@ -22,6 +23,23 @@ class MemeberService {
     throw err;
   }
 }
+
+ public async getRestaurant(): Promise<Member> {
+  try {
+    const url = this.path +"/member/restaurant";
+    const result = await axios.get(url);
+    console.log("getRestaurant:",result);
+
+    const restaurant:Member = result.data;
+    return result.data;
+  } catch (err) {
+    console.log("Error, getRestaurant:", err);
+    throw err;
+  }
+}
+
+
+
 
 
    
