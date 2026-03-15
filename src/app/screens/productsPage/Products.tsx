@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Button, ButtonGroup, Container, IconButton, Stack, TextField, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
@@ -9,11 +9,14 @@ import PaginationItem from "@mui/material/PaginationItem";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createSelector, Dispatch } from "@reduxjs/toolkit";
 import { setProducts } from "./slice";
 import { Product } from "../../../lib/data/types/product";
 import { retrieveProducts } from "./selector";
+import ProductService from "../../services/ProductService";
+import { ProductCollection } from "../../../lib/data/enums/product.enum";
+import { serverApi } from "../../../lib/config";
 
 /** REDUX SLICE & SELECTOR **/
 const actionDispatch = (dispatch:Dispatch) => ({
@@ -25,17 +28,7 @@ const producstRetriever = createSelector (retrieveProducts, (products) => ({
 }));
 
 
-const products = [
-  { productName: "Cutlet", imagePath: "/img/cutlet.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab-fresh.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab.webp" },
-  { productName: "Lavash", imagePath: "/img/lavash.webp" },
-  { productName: "Lavash", imagePath: "/img/lavash.webp" },
-  { productName: "Cutlet", imagePath: "/img/cutlet.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab-fresh.webp" },
 
-];
 
 const logos = [
   { imagePath: "/img/gurme.webp" },
@@ -45,6 +38,21 @@ const logos = [
 ];
 
 export default function Products() {
+const {setProducts} = actionDispatch(useDispatch());
+const {products} = useSelector(producstRetriever);
+
+useEffect ( () => {
+  const product = new ProductService();
+  product
+  .getProducts({
+    page:1,
+    limit:8,
+    order:"createdAt",
+    productCollection: ProductCollection.DISH,
+  }).then((data) => setProducts(data))
+  .catch((err) => console.log(err));
+}, [] );
+  
   return (
     <Container maxWidth="lg">
       <Box className="headerRow">
@@ -114,13 +122,17 @@ export default function Products() {
         <Stack className={"product-wrapper"}>
           {products.length !== 0 ? (
             products.map((product, index) => {
+               const imagePath = `${serverApi}/${product.productImages[0]}`;
+               const sizeVolume = product.productCollection === ProductCollection.DRINK
+               ? product.productVolume +"litr"
+               : product.productSize + "size";
               return (
                 <Stack key={index} className={"product-card"}>
                   <Stack
                     className={"product-img"}
-                    sx={{ backgroundImage: `url(${product.imagePath})` }}
+                    sx={{ backgroundImage: `url(${imagePath})` }}
                   >
-                    <div className={"product-sale"}>Large size</div>
+                    <div className={"product-sale"}>{sizeVolume}</div>
 
                     <Button className={"shop-btn"}>
                       <img
@@ -131,9 +143,12 @@ export default function Products() {
                     </Button>
 
                     <Button className={"view-btn"} sx={{ right: "36px" }}>
-                      <Badge badgeContent={20} color="secondary">
+                      <Badge badgeContent={product.productViews} color="secondary">
                         <RemoveRedEyeIcon
-                          sx={{ color: 20 > 0 ? "gray" : "white" }}
+                          sx={{ 
+                            color: 
+                            product.productViews ===  0 ? "gray" : "white",
+                          }}
                         />
                       </Badge>
                     </Button>
@@ -144,7 +159,7 @@ export default function Products() {
 
                     <div className={"product-price"}>
                       <MonetizationOnIcon />
-                      {12}
+                      {product.productPrice}
                     </div>
                   </Box>
                 </Stack>
