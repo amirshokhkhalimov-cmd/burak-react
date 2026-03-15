@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Box, Button, ButtonGroup, Container, IconButton, Stack, TextField, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
@@ -12,11 +12,12 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector, Dispatch } from "@reduxjs/toolkit";
 import { setProducts } from "./slice";
-import { Product } from "../../../lib/data/types/product";
+import { Product, ProductInquiry } from "../../../lib/data/types/product";
 import { retrieveProducts } from "./selector";
 import ProductService from "../../services/ProductService";
 import { ProductCollection } from "../../../lib/data/enums/product.enum";
 import { serverApi } from "../../../lib/config";
+import { useHistory } from "react-router-dom";
 
 /** REDUX SLICE & SELECTOR **/
 const actionDispatch = (dispatch:Dispatch) => ({
@@ -41,17 +42,68 @@ export default function Products() {
 const {setProducts} = actionDispatch(useDispatch());
 const {products} = useSelector(producstRetriever);
 
-useEffect ( () => {
-  const product = new ProductService();
-  product
-  .getProducts({
-    page:1,
+const [productSearch, setProductSearch] = useState<ProductInquiry>({
+  page:1,
     limit:8,
     order:"createdAt",
     productCollection: ProductCollection.DISH,
-  }).then((data) => setProducts(data))
+    search: "",
+});
+
+/** For Search Handler **/
+const [searchText, setSearchText] = useState<string>("");
+
+const history = useHistory();
+
+useEffect ( () => {
+  const product = new ProductService();
+  product
+  .getProducts(productSearch)
+  .then((data) => setProducts(data))
   .catch((err) => console.log(err));
-}, [] );
+}, [productSearch] );
+
+/** BU mantiq search buttonda yozilgan valueni o`chirgandan keyin menuga qaytadi **/
+useEffect (() => {
+  if(searchText === "") {
+    productSearch.search = "";
+    setProductSearch({...productSearch });
+
+  }
+}, [searchText]);
+
+
+
+/** HANDLERS **/
+const searchCollectionHandler = (collection:ProductCollection) => {
+  productSearch.page = 1;
+  productSearch.productCollection = collection;
+  setProductSearch({...productSearch });
+};
+
+/** Filter Handler **/
+const searchOrderHandler = (order:string) => {
+  productSearch.page = 1;
+  productSearch.order = order;
+  setProductSearch({...productSearch });
+};
+
+/** Search Handler **/
+const searchProductHandler = ()=> {
+  productSearch.search = searchText;
+  setProductSearch({...productSearch});
+};
+
+/** Pagination HAndler **/
+const paginationHandler = (e:ChangeEvent<any>, value:number) => {
+  productSearch.page = value;
+  setProductSearch({...productSearch});
+};
+
+/** Choose Dish HAndler**/
+const chooseDishHandler = (id:string) => {
+  history.push(`/products/${id}`);
+};
   
   return (
     <Container maxWidth="lg">
@@ -64,12 +116,18 @@ useEffect ( () => {
             placeholder="Type here"
             variant="outlined"
             className="searchInput"
-          />
+            value={searchText}
+            onChange={(e) => setSearchText (e.target.value)}
+            onKeyDown={(e) => {
+              if(e.key === "Enter")  searchProductHandler();
+            }}
+           />
 
           <Button
             variant="contained"
             className="searchButton"
             endIcon={<SearchIcon />}
+            onClick={searchProductHandler}
           >
             SEARCH
           </Button>
@@ -79,15 +137,30 @@ useEffect ( () => {
       {/* Filter */}
       <Stack className={"dishes-filter-section"}>
         <Stack className={"dishes-filter-box"}>
-          <Button variant="contained" color="primary" className="order">
+          <Button 
+          variant="contained" 
+          color={productSearch.order === "new" ? "primary" : "secondary"}
+          className="order"
+          onClick={() => searchOrderHandler ("new")} /** createdAt **/
+          >
             New
           </Button>
 
-          <Button variant="contained" color="secondary" className="order">
+          <Button 
+          variant="contained" 
+         color={productSearch.order === "productPrice" ? "primary" : "secondary"}
+          className="order"
+          onClick={() => searchOrderHandler ("productPrice")}
+          >
             Price
           </Button>
 
-          <Button variant="contained" color="secondary" className="order">
+          <Button 
+          variant="contained" 
+          color={productSearch.order === "productViews" ? "primary" : "secondary"}
+          className="order"
+          onClick={() => searchOrderHandler ("productViews")}
+          >
             Views
           </Button>
         </Stack>
@@ -97,23 +170,58 @@ useEffect ( () => {
       <Stack className={"menu-layout"}>
         {/* Category-List */}
         <Stack className={"dishes-category-section"}>
-          <Button variant="contained" color="primary" className="category-list-btn">
+          <Button 
+          variant="contained" 
+          color={productSearch.productCollection === ProductCollection.DISH ?"primary" : "secondary"} 
+          className="category-list-btn"
+          onClick={()=>
+            searchCollectionHandler(ProductCollection.DISH)
+          }
+          >
             Dish
           </Button>
 
-          <Button variant="contained" color="secondary" className="category-list-btn">
+          <Button 
+          variant="contained" 
+          color={productSearch.productCollection === ProductCollection.SALAD ?"primary" : "secondary"}
+          className="category-list-btn"
+          onClick={()=>
+            searchCollectionHandler(ProductCollection.SALAD)
+          }
+          >
             Salad
           </Button>
 
-          <Button variant="contained" color="secondary" className="category-list-btn">
+          <Button 
+          variant="contained" 
+          color={productSearch.productCollection === ProductCollection.DRINK ?"primary" : "secondary"}
+          className="category-list-btn"
+          onClick={()=>
+            searchCollectionHandler(ProductCollection.DRINK)
+          }
+          >
             Drink
           </Button>
 
-          <Button variant="contained" color="secondary" className="category-list-btn">
-            Desert
+          <Button 
+          variant="contained" 
+          color={productSearch.productCollection === ProductCollection.DESSERT ?"primary" : "secondary"}
+          className="category-list-btn"
+          onClick={()=>
+            searchCollectionHandler(ProductCollection.DESSERT)
+          }
+          >
+            Dessert
           </Button>
 
-          <Button variant="contained" color="secondary" className="category-list-btn">
+          <Button 
+          variant="contained" 
+          color={productSearch.productCollection === ProductCollection.OTHER ?"primary" : "secondary"}
+          className="category-list-btn"
+          onClick={()=>
+            searchCollectionHandler(ProductCollection.OTHER)
+          }
+          >
             Other
           </Button>
         </Stack>
@@ -127,7 +235,9 @@ useEffect ( () => {
                ? product.productVolume +"litr"
                : product.productSize + "size";
               return (
-                <Stack key={index} className={"product-card"}>
+                <Stack key={product._id} className={"product-card"}
+                onClick={() => chooseDishHandler (product._id)}
+                >
                   <Stack
                     className={"product-img"}
                     sx={{ backgroundImage: `url(${imagePath})` }}
@@ -174,8 +284,11 @@ useEffect ( () => {
       {/* Pagination */}
       <Stack className={"pagination-section"}>
         <Pagination
-          count={3}
-          page={1}
+          count={products.length !== 0 
+            ? productSearch.page + 1
+            : productSearch.page 
+          }
+          page={productSearch.page}
           renderItem={(item) => (
             <PaginationItem
               components={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
@@ -183,6 +296,7 @@ useEffect ( () => {
               color={"secondary"}
             />
           )}
+          onChange={paginationHandler}
         />
       </Stack>
 
