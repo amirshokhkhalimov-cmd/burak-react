@@ -18,7 +18,7 @@ import { Product } from "../../../lib/data/types/product";
 import { retrieveChosenProduct, retrieveProducts, retrieveRestaurant } from "./selector";
 import { useParams } from "react-router-dom";
 import ProductService from "../../services/ProductService";
-import MemeberService from "../../services/memberService";
+import MemeberService from "../../services/MemberService";
 import { Member } from "../../../lib/data/types/member";
 import { serverApi } from "../../../lib/config";
 import { CartItem } from "../../../lib/data/types/search";

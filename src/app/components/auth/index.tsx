@@ -6,12 +6,15 @@ import Fade from "@material-ui/core/Fade";
 import { Fab, Stack, TextField } from "@mui/material";
 import styled from "styled-components";
 import LoginIcon from "@mui/icons-material/Login";
-import { T } from "../../../lib/data/types/common";
+
 import { Messages } from "../../../lib/config";
-import { LoginInput, MemberInput } from "../../../lib/data/types/member";
-import memberService from "../../services/memberService";
-import { sweetErrorHandling } from "../../../sweetAlert";
+
+import MemberService from "../../services/MemberService";
+
 import { useGlobals } from "../../hooks/useGlobals";
+import { T } from "../../../lib/data/types/common";
+import { LoginInput, MemberInput } from "../../../lib/data/types/member";
+import { sweetErrorHandling } from "../../../sweetAlert";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -46,94 +49,80 @@ interface AuthenticationModalProps {
 export default function AuthenticationModal(props: AuthenticationModalProps) {
   const { signupOpen, loginOpen, handleSignupClose, handleLoginClose } = props;
   const classes = useStyles();
-
-   const [memberNick,setMemberNick] =useState<string>("");
-  const [memberPhone,setMemberPhone] =useState<string>("");
-  const [memberPassword,setMembePassword] =useState<string>("");
-
-  const {setAuthMember} = useGlobals();
-  
+  const [memberNick, setMemberNick] = useState<string>("");
+  const [memberPhone, setMemberPhone] = useState<string>("");
+  const [memberPassword, setMemberPassword] = useState<string>("");
+  const { setAuthMember} = useGlobals();
 
   /** HANDLERS **/
-  const handleUsername = (e:T) => {
-    console.log(e.target.value);
+
+  const handleUsername = (e: T) => {
     setMemberNick(e.target.value);
   };
-
-  const handlePhone = (e:T) => {
-    console.log(e.target.value);
+  const handlePhone = (e: T) => {
     setMemberPhone(e.target.value);
   };
-
-  const handlePassword = (e:T) => {
-    console.log(e.target.value);
-    setMembePassword(e.target.value);
+  const handlePassword = (e: T) => {
+    setMemberPassword(e.target.value);
   };
-  /** Enter **/
-  const handlePasswordKeyDown = (e:T) => {
-    if(e.key === "Enter" && signupOpen) {
+  const handlePasswordKeyDown = (e: T) => {
+    if (e.key === "Enter" && signupOpen) {
       handleSignupRequest().then();
-    }else if (e.key === "Enter" && loginOpen) {
+    } else if (e.key === "Enter" && loginOpen) {
       handleLoginRequest().then();
     }
   };
 
-  const handleSignupRequest = async() => {
-    try{
+  const handleSignupRequest = async () => {
+    try {
       const isFulfill =
-      memberNick!== "" && memberPhone!== "" && memberPassword !== "";
-      if(!isFulfill) throw new Error (Messages.error3);
+        memberNick !== "" && memberPhone !== "" && memberPassword !== "";
+      if (!isFulfill) throw new Error(Messages.error3);
 
-      const signupInput:MemberInput = {
-        memberNick:memberNick,
-        memberPhone:memberPhone,
-        memberPassword:memberPassword,
+      const signupInput: MemberInput = {
+        memberNick: memberNick,
+        memberPhone: memberPhone,
+        memberPassword: memberPassword,
       };
-
-      const member = new memberService();
+      const member = new MemberService();
       const result = await member.signup(signupInput);
 
-      //Saving Authenticated user
-      setAuthMember(result);
       
+
+      setAuthMember(result);
       handleSignupClose();
-     }catch (err) {
+    } catch (err) {
       console.log(err);
       handleSignupClose();
       sweetErrorHandling(err).then();
     }
   };
 
-  /** Login request **/
-     const handleLoginRequest = async() => {
-    try{
-      const isFulfill =
-      memberNick!== "" &&  memberPassword !== "";
-      if(!isFulfill) throw new Error (Messages.error3);
+  const handleLoginRequest = async () => {
+    try {
+      const isFulfill = memberNick !== "" && memberPassword !== "";
+      if (!isFulfill) throw new Error(Messages.error3);
 
-      const loginInput:LoginInput = {
-        memberNick:memberNick,
-        memberPassword:memberPassword,
+      const loginInput: LoginInput = {
+        memberNick: memberNick,
+        memberPassword: memberPassword,
       };
 
-      const member = new memberService();
+      const member = new MemberService();
       const result = await member.login(loginInput);
 
-      //Saving Authenticated user
-      setAuthMember(result);
 
+      setAuthMember(result);
       handleLoginClose();
-     }catch (err) {
+    } catch (err) {
       console.log(err);
       handleLoginClose();
       sweetErrorHandling(err).then();
     }
   };
-
- 
-
   return (
     <div>
+      //** Its for Sign up**/
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -161,7 +150,6 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
                 label="username"
                 variant="outlined"
                 onChange={handleUsername}
-                onKeyDown={handlePasswordKeyDown}
               />
               <TextField
                 sx={{ my: "17px" }}
@@ -175,6 +163,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
                 label="password"
                 variant="outlined"
                 onChange={handlePassword}
+                onKeyDown={handlePasswordKeyDown}
               />
               <Fab
                 sx={{ marginTop: "30px", width: "120px" }}
@@ -189,9 +178,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
           </Stack>
         </Fade>
       </Modal>
-
-
-      /** **/
+      //** Its for Auth **/
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

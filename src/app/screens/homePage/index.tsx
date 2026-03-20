@@ -13,7 +13,7 @@ import { setNewDishes, setPopularDishes, setTopUsers } from "./slice";
 import { Product } from "../../../lib/data/types/product";
 import ProductService from "../../services/ProductService";
 import { ProductCollection } from "../../../lib/data/enums/product.enum";
-import MemeberService from "../../services/memberService";
+import MemeberService from "../../services/MemberService";
 import { Member } from "../../../lib/data/types/member";
 
 /** REDUX SLICE & SELECTOR **/
