@@ -8,7 +8,7 @@ import styled from "styled-components";
 import LoginIcon from "@mui/icons-material/Login";
 import { T } from "../../../lib/data/types/common";
 import { Messages } from "../../../lib/config";
-import { MemberInput } from "../../../lib/data/types/member";
+import { LoginInput, MemberInput } from "../../../lib/data/types/member";
 import memberService from "../../services/memberService";
 import { sweetErrorHandling } from "../../../sweetAlert";
 
@@ -69,8 +69,10 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
   const handlePasswordKeyDown = (e:T) => {
     if(e.key === "Enter" && signupOpen) {
       handleSignupRequest().then();
+    }else if (e.key === "Enter" && loginOpen) {
+      handleLoginRequest().then();
     }
-  }
+  };
 
   const handleSignupRequest = async() => {
     try{
@@ -88,6 +90,29 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       const member = new memberService();
       const result = await member.signup(signupInput);
 
+      handleSignupClose();
+     }catch (err) {
+      console.log(err);
+      handleSignupClose();
+      sweetErrorHandling(err).then();
+    }
+  };
+
+  /** Login request **/
+     const handleLoginRequest = async() => {
+    try{
+      const isFulfill =
+      memberNick!== "" &&  memberPassword !== "";
+      if(!isFulfill) throw new Error (Messages.error3);
+
+      const loginInput:LoginInput = {
+        memberNick:memberNick,
+        memberPassword:memberPassword,
+      };
+
+      const member = new memberService();
+      const result = await member.login(loginInput);
+
       handleLoginClose();
      }catch (err) {
       console.log(err);
@@ -95,7 +120,6 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       sweetErrorHandling(err).then();
     }
   };
-
 
  
 
@@ -157,6 +181,8 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
         </Fade>
       </Modal>
 
+
+      /** **/
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -189,17 +215,21 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
                 label="username"
                 variant="outlined"
                 sx={{ my: "10px" }}
+                onChange={handleUsername}
               />
               <TextField
                 id={"outlined-basic"}
                 label={"password"}
                 variant={"outlined"}
                 type={"password"}
+                onChange={handlePassword}
+                onKeyDown={handlePasswordKeyDown}
               />
               <Fab
                 sx={{ marginTop: "27px", width: "120px" }}
                 variant={"extended"}
                 color={"primary"}
+                onClick={handleLoginRequest}
               >
                 <LoginIcon sx={{ mr: 1 }} />
                 Login
