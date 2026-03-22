@@ -1,16 +1,31 @@
-import { useState, SyntheticEvent } from "react";
+import { useState, SyntheticEvent,  } from "react";
 import { Container, Stack, Box } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
+import LocationOnIcon from "@mui/icons-material/LocationOn";                          
 import PausedOrders from "./PausedOrders";
 import ProcessOrders from "./ProcessOrders";
 import FinishedOrders from "./FinishedOrders";
-import "../../../css/order.css";
+import "../../../css/order.css";        
+import {setPausedOrders,seProcessOrders, setFinishedOrders,} from "./slice";
+import { Order } from "../../../lib/data/types/order";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "@reduxjs/toolkit";
+
+/** REDUX SLICE & SELECTOR **/
+const actionDispatch = (dispatch: Dispatch) => ({
+    setPausedOrders:(data:Order[]) => dispatch(setPausedOrders(data)),// 2nd setPopularDishes is reducer
+     seProcessOrders:(data:Order[]) => dispatch(seProcessOrders(data)),
+     setFinishedOrders:(data:Order[]) => dispatch(setFinishedOrders(data))
+});
 
 export default function OrdersPage() {
+    const {setPausedOrders,seProcessOrders, setFinishedOrders} = 
+    actionDispatch(useDispatch());
     const [value, setValue] = useState("1");
+
+    /** HANDLERS **/
 
     const handleChange = (e: SyntheticEvent, newValue: string) => {
         setValue(newValue);
