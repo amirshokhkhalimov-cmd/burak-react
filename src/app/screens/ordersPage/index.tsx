@@ -1,56 +1,58 @@
-import { useState, SyntheticEvent, useEffect,  } from "react";
+import { useState, SyntheticEvent, useEffect, } from "react";
 import { Container, Stack, Box } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
-import LocationOnIcon from "@mui/icons-material/LocationOn";                          
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PausedOrders from "./PausedOrders";
 import ProcessOrders from "./ProcessOrders";
 import FinishedOrders from "./FinishedOrders";
-import "../../../css/order.css";        
-import {setPausedOrders,seProcessOrders, setFinishedOrders,} from "./slice";
+import "../../../css/order.css";
+import { setPausedOrders, seProcessOrders, setFinishedOrders, } from "./slice";
 import { Order, OrderInquiry } from "../../../lib/data/types/order";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "@reduxjs/toolkit";
 import { OrderStatus } from "../../../lib/data/enums/order.enum";
 import OrderService from "../../services/OrderService";
 import { useGlobals } from "../../hooks/useGlobals";
+import { serverApi } from "../../../lib/config";
+import { MemberType } from "../../../lib/data/enums/member.enum";
 
 /** REDUX SLICE & SELECTOR **/
 const actionDispatch = (dispatch: Dispatch) => ({
-    setPausedOrders:(data:Order[]) => dispatch(setPausedOrders(data)),// 2nd setPopularDishes is reducer
-     seProcessOrders:(data:Order[]) => dispatch(seProcessOrders(data)),
-     setFinishedOrders:(data:Order[]) => dispatch(setFinishedOrders(data))
+    setPausedOrders: (data: Order[]) => dispatch(setPausedOrders(data)),// 2nd setPopularDishes is reducer
+    seProcessOrders: (data: Order[]) => dispatch(seProcessOrders(data)),
+    setFinishedOrders: (data: Order[]) => dispatch(setFinishedOrders(data))
 });
 
 export default function OrdersPage() {
-    const {setPausedOrders,seProcessOrders, setFinishedOrders} = 
-    actionDispatch(useDispatch());
-    const {orderBuilder} = useGlobals();
+    const { setPausedOrders, seProcessOrders, setFinishedOrders } =
+        actionDispatch(useDispatch());
+    const {authMember, orderBuilder } = useGlobals();
     const [value, setValue] = useState("1");
     const [orderInquiry, setOrderInquiry] = useState<OrderInquiry>({
-        page:1,
-        limit:5,
-        orderStatus:OrderStatus.PAUSE,
+        page: 1,
+        limit: 5,
+        orderStatus: OrderStatus.PAUSE,
     });
 
     useEffect(() => {
         const order = new OrderService();
         order
-        .getMyOrders({...orderInquiry,orderStatus:OrderStatus.PAUSE})
-        .then((data)=> setPausedOrders(data))
-        .catch((err)=> console.log(err));
+            .getMyOrders({ ...orderInquiry, orderStatus: OrderStatus.PAUSE })
+            .then((data) => setPausedOrders(data))
+            .catch((err) => console.log(err));
 
         order
-        .getMyOrders({...orderInquiry,orderStatus:OrderStatus.PROCESS})
-        .then((data)=> seProcessOrders(data))
-        .catch((err)=> console.log(err));
+            .getMyOrders({ ...orderInquiry, orderStatus: OrderStatus.PROCESS })
+            .then((data) => seProcessOrders(data))
+            .catch((err) => console.log(err));
 
         order
-        .getMyOrders({...orderInquiry,orderStatus:OrderStatus.FINISH})
-        .then((data)=> setFinishedOrders(data))
-        .catch((err)=> console.log(err));
-    },[orderInquiry, orderBuilder])
+            .getMyOrders({ ...orderInquiry, orderStatus: OrderStatus.FINISH })
+            .then((data) => setFinishedOrders(data))
+            .catch((err) => console.log(err));
+    }, [orderInquiry, orderBuilder])
 
     /** HANDLERS **/
 
@@ -79,8 +81,8 @@ export default function OrdersPage() {
                         </Box>
 
                         <Stack className={"order-main-content"}>
-                            <PausedOrders setValue={setValue}/>
-                            <ProcessOrders setValue={setValue}/>
+                            <PausedOrders setValue={setValue} />
+                            <ProcessOrders setValue={setValue} />
                             <FinishedOrders />
                         </Stack>
                     </TabContext>
@@ -91,20 +93,28 @@ export default function OrdersPage() {
                         <Box className={"member-box"}>
                             <div className={"order-user-img"}>
                                 <img
-                                    src={"/icons/default-user.svg"}
+                                    src={
+                                            authMember?.memberImage
+                                                ? `${serverApi}/${authMember.memberImage}`
+                                                : "/icons/default-user.svg"
+                                        }
                                     className={"order-user-avatar"}
                                 />
 
                                 <div className={"order-user-icon-box"}>
                                     <img
-                                        src={"/icons/user-badge.svg"}
+                                        src={
+                      authMember?.memberType === MemberType.RESTAURANT
+                        ? "/icons/restaurant.svg"
+                        : "/icons/user-badge.svg"
+                    }
                                         className={"order-user-prof-img"}
                                     />
                                 </div>
                             </div>
 
-                            <span className={"order-user-name"}>Martin</span>
-                            <span className={"order-user-name"}>User</span>
+                            <span className={"order-user-name"}>{authMember?.memberNick }</span>
+                            <span className={"order-user-name"}>{authMember?.memberType}</span>
                         </Box>
 
                         <Box className={"liner"}></Box>
@@ -112,7 +122,11 @@ export default function OrdersPage() {
                         <div className={"order-user-address"}>
                             <img src={"/icons/location.svg"}
                             />
-                            <span className={"spec-address-txt"}>South Korea, Busan</span>
+                            <span className={"spec-address-txt"}>
+                                {authMember?.memberAddress
+                  ? authMember.memberAddress
+                  : "Do not exist"}
+                            </span>
 
                         </div>
                     </Box>
@@ -142,7 +156,7 @@ export default function OrdersPage() {
                         </div>
 
                         <input
-                        // In the same class as card-input to make it same as card number input//
+                            // In the same class as card-input to make it same as card number input//
                             className={"card-input"}
                             placeholder="Martin User"
                         />
