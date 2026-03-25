@@ -3,29 +3,48 @@ import { Box, Button, Stack } from "@mui/material";
 import TabPanel from "@mui/lab/TabPanel";
 import moment from "moment";
 
+import { useSelector } from "react-redux";
+import { createSelector } from "reselect";
+import { retrieveProcessOrders } from "./selector";
+import { Product } from "../../../lib/data/types/product";
+import { serverApi } from "../../../lib/config";
+import { Order, OrderItem } from "../../../lib/data/types/order";
+
+/** REDUX SLICE & SELECTOR **/
+const processOrdersRetriever = createSelector(
+    retrieveProcessOrders,
+    (processOrders) => ({ processOrders })
+);
+
 export default function ProcessOrders() {
+    const { processOrders } = useSelector(processOrdersRetriever);
+
     return (
         <TabPanel value={"2"}>
             <Stack>
-                {[].map((ele, index) => {
+                {processOrders?.map((order: Order) => {
                     return (
-                        <Box key={index} className={"order-main-box"}>
+                        <Box key={order._id} className={"order-main-box"}>
                             <Box className={"order-box-scroll"}>
-                                {[1, 2, 3].map((ele2, index2) => {
+                                {order?.orderItems?.map((item: OrderItem) => {
+                                    const product: Product = order.productData.filter(
+                                        (ele: Product) => item.productId === ele._id
+                                    )[0];
+                                    const imagePath = `${serverApi}/${product.productImages[0]}`
                                     return (
-                                        <Box key={index2} className={"orders-name-price"}>
+                                        <Box key={item._id} className={"orders-name-price"}>
                                             <img
-                                                src={"/img/kebab-fresh.webp"}
+                                                src={imagePath}
                                                 className={"order-dish-img"}
                                             />
-                                            <p className={"title-dish"}>Kebab</p>
+                                            <p className={"title-dish"}>{product.productName}</p>
 
                                             <Box className={"price-box"}>
-                                                <p>$12</p>
+                                                <p>${item.itemPrice}</p>
                                                 <img src={"/icons/close.svg"} />
-                                                <p>2</p>
+                                                <p>{item.itemQuantity}</p>
                                                 <img src={"/icons/pause.svg"} />
-                                                <p style={{ marginLeft: "15px" }}>$24</p>
+                                                <p style={{ marginLeft: "15px" }}>${item.itemQuantity * item.itemPrice}</p>
                                             </Box>
                                         </Box>
                                     );
@@ -35,7 +54,7 @@ export default function ProcessOrders() {
                             <Box className={"total-price-box"}>
                                 <Box className={"box-total"}>
                                     <p>Product price</p>
-                                    <p>$22</p>
+                                    <p>${order.orderTotal - order.orderDelivery}</p>
 
                                     <img
                                         src={"/icons/plus.svg"}
@@ -43,7 +62,7 @@ export default function ProcessOrders() {
                                     />
 
                                     <p>delivery cost</p>
-                                    <p>$2</p>
+                                    <p>${order.orderDelivery}</p>
 
                                     <img
                                         src={"/icons/pause.svg"}
@@ -51,7 +70,7 @@ export default function ProcessOrders() {
                                     />
 
                                     <p>Total</p>
-                                    <p>$24</p>
+                                    <p>${order.orderTotal}</p>
 
                                 </Box>
 
@@ -68,14 +87,14 @@ export default function ProcessOrders() {
                     );
                 })}
 
-                {true && (
+                {!processOrders || (processOrders.length === 0  && ( 
                     <Box display={"flex"} flexDirection={"row"} justifyContent={"center"}>
                         <img
                             src={"/icons/noimage-list.svg"}
                             style={{ width: 300, height: 300 }}
                         />
                     </Box>
-                )}
+                ))}
 
             </Stack>
         </TabPanel>
