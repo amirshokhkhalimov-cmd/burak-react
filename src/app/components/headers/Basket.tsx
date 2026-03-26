@@ -182,7 +182,7 @@ export default function Basket(props: BasketProps) {
                 fullWidth
                 onClick={proceedOrderHandler}
               >
-                Checkout
+                CHECKOUT
               </Button>
             </Box>
           ) : (
